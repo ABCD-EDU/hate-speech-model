@@ -1,2 +1,4 @@
 bert_notebook/lightning_logs/
 bert_notebook/saved_model/
+src/transformer/classes/__pycache__
+src/transformer/logs/lightning_logs
