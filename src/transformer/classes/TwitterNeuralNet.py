@@ -9,9 +9,8 @@ with open('./config/config.json', 'r') as f:
     config = json.load(f)
 
 
-
 class TwitterNeuralNet(pl.LightningModule):
-    def __init__(self, task1_n_classes: int=2, task2_n_classes: int=3, n_training_steps=None, n_warmup_steps=None):
+    def __init__(self, task1_n_classes: int = 2, task2_n_classes: int = 3, n_training_steps=None, n_warmup_steps=None):
         super().__init__()
         self.bert = AutoModel.from_pretrained(
             config['bert_model_name'], return_dict=True)
@@ -30,8 +29,8 @@ class TwitterNeuralNet(pl.LightningModule):
 
         self.n_training_steps = n_training_steps
         self.n_warmup_steps = n_warmup_steps
-        self.criterion = nn.BCEWithLogitsLoss(reduction='mean')
-      #   self.dropout = nn.Dropout(0.2)
+        self.criterion = nn.BCELoss()
+        self.dropout = nn.Dropout(0.2)
 
     def forward(self, input_ids, attention_mask, labels=None):
         output = self.bert(input_ids, attention_mask=attention_mask)
@@ -39,12 +38,15 @@ class TwitterNeuralNet(pl.LightningModule):
         # print(attention_mask.shape)
         pooled_output = torch.mean(output.last_hidden_state, 1)
         pooled_output = self.hidden(pooled_output)
-      #   pooled_output = self.dropout(pooled_output)
+        pooled_output = self.dropout(pooled_output)
         pooled_output = F.relu(pooled_output)
 
         output1 = self.task1_classifier(pooled_output)
         output2 = self.task2_classifier(pooled_output)
-
+        output1 = torch.sigmoid(output1)
+        output2 = torch.sigmoid(output2)
+        # print(output1)
+        # print(output2)
         loss = 0
         if labels is not None:
             loss1 = self.criterion(output1, labels['labels1'])
