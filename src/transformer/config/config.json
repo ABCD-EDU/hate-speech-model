@@ -1,0 +1,10 @@
+{
+   "num_workers": 0,
+   "bert_model_name": "bert-base-uncased",
+   "hotdog": "Nice",
+   "n_epochs": 8,
+   "batch_size": 8,
+   "max_token_len" : 256,
+   "progress_bar_refresh_rate":3,
+   "num_sanity_val_steps": 10
+}
