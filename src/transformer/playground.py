@@ -10,6 +10,7 @@ with open('./config/config.json', 'r') as f:
 
 print('-------IMPORTING MODEL-------')
 PATH = './torch_model'
+torch.set_printoptions(precision=10)
 device = torch.device('cpu')
 loaded_model = TwitterNeuralNet()  # Task1->2 labels | Task2->3 Labels
 loaded_model.load_state_dict(torch.load(
