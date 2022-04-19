@@ -22,7 +22,7 @@ print('-------READING TRAINING FILES COMPLETED-------')
 train_df = pd.read_csv('../../res/preprocessed/task1_2/train_task1_2.csv')
 val_df = pd.read_csv('../../res/preprocessed/task1_2/val_task1_2.csv')
 test_df = pd.read_csv('../../res/preprocessed/task1_2/test_task1_2.csv')
-
+train_df = train_df.dropna()
 val_df = val_df.dropna()
 test_df = test_df.dropna()
 
@@ -52,7 +52,6 @@ total_training_steps = steps_per_epoch * config["n_epochs"]
 warmup_steps = total_training_steps // 5
 
 
-
 logger = TensorBoardLogger("./logs/lightning_logs",
                            'twitter-task-all')
 
@@ -77,13 +76,13 @@ print('-------NEURAL NET INITIALIZED-------')
 print('-------TRAINING-------')
 
 trainer = pl.Trainer(
-   max_epochs=config['n_epochs'],
-   gpus=1,
-   progress_bar_refresh_rate=config['progress_bar_refresh_rate'],
-   num_sanity_val_steps=config['num_sanity_val_steps'],
-   fast_dev_run=False,
-   logger=logger,
-   checkpoint_callback=checkpoint_callback,
+    max_epochs=config['n_epochs'],
+    gpus=1,
+    progress_bar_refresh_rate=config['progress_bar_refresh_rate'],
+    num_sanity_val_steps=config['num_sanity_val_steps'],
+    fast_dev_run=False,
+    logger=logger,
+    checkpoint_callback=checkpoint_callback,
 )
 trainer.fit(model, data_module)
 
