@@ -16,12 +16,11 @@ with open('./config/config.json', 'r') as f:
     config = json.load(f)
 
 print('-------READING TRAINING FILES-------')
-task_df = pd.read_csv('../../res/preprocessed/task1_2/task1_2.csv')
-task_df = task_df.dropna()
+
+train_df = pd.read_csv('../../res/preprocessed/train_final.csv')
+val_df = pd.read_csv('../../res/preprocessed/val_final.csv')
+test_df = pd.read_csv('../../res/preprocessed/test_final.csv')
 print('-------READING TRAINING FILES COMPLETED-------')
-train_df = pd.read_csv('../../res/preprocessed/task1_2/train_task1_2.csv')
-val_df = pd.read_csv('../../res/preprocessed/task1_2/val_task1_2.csv')
-test_df = pd.read_csv('../../res/preprocessed/task1_2/test_task1_2.csv')
 train_df = train_df.dropna()
 val_df = val_df.dropna()
 test_df = test_df.dropna()
@@ -29,8 +28,9 @@ test_df = test_df.dropna()
 LABEL_COLUMNS = list(train_df.columns)
 LABEL_COLUMNS.remove('text')
 
-TASK1_LABELS = LABEL_COLUMNS[:2]
-TASK2_LABELS = LABEL_COLUMNS[2:]
+TASK1_LABELS = LABEL_COLUMNS[:3]
+TASK2_LABELS = LABEL_COLUMNS[3:4]
+TASK3_LABELS = LABEL_COLUMNS[4:]
 
 print('-------INITIALIZING TOKENIZER-------')
 tokenizer = AutoTokenizer.from_pretrained(config['bert_model_name'])
@@ -68,6 +68,7 @@ print('-------INITIALIZING TWITTER NEURAL NET-------')
 model = TwitterNeuralNet(
     task1_n_classes=len(TASK1_LABELS),
     task2_n_classes=len(TASK2_LABELS),
+    task3_n_classes=len(TASK3_LABELS),
     n_warmup_steps=warmup_steps,
     n_training_steps=total_training_steps
 )

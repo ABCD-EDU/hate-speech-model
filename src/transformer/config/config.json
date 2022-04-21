@@ -1,7 +1,7 @@
 {
    "num_workers": 0,
    "bert_model_name": "bert-base-uncased",
-   "n_epochs": 10,
+   "n_epochs": 2,
    "batch_size": 12,
    "max_token_len": 256,
    "progress_bar_refresh_rate": 3,

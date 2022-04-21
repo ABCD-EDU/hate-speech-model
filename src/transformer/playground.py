@@ -24,8 +24,9 @@ task_df = pd.read_csv('../../res/preprocessed/task1_2/task1_2.csv')
 LABEL_COLUMNS = list(task_df.columns)
 LABEL_COLUMNS.remove('text')
 
-TASK1_LABELS = LABEL_COLUMNS[:2]
-TASK2_LABELS = LABEL_COLUMNS[2:]
+TASK1_LABELS = LABEL_COLUMNS[:3]
+TASK2_LABELS = LABEL_COLUMNS[3:4]
+TASK3_LABELS = LABEL_COLUMNS[4:]
 
 
 task1_id2label = {idx: label for idx, label in enumerate(TASK1_LABELS)}
@@ -33,6 +34,10 @@ task1_label2id = {label: idx for idx, label in enumerate(TASK1_LABELS)}
 
 task2_label2id = {label: idx for idx, label in enumerate(TASK2_LABELS)}
 task2_id2label = {idx: label for idx, label in enumerate(TASK2_LABELS)}
+
+task3_label3id = {label: idx for idx, label in enumerate(TASK3_LABELS)}
+task3_id3label = {idx: label for idx, label in enumerate(TASK3_LABELS)}
+
 
 print('-------INITIALIZING TOKENIZER-------')
 tokenizer = AutoTokenizer.from_pretrained(config['bert_model_name'])
@@ -59,6 +64,11 @@ while True:
 
     print('TASK 2')
     print(output[1])
+    print(task2_id2label)
+    print(task2_id2label[int(torch.argmax(output[1]))])
+
+    print('TASK 3')
+    print(output[2])
     print(task2_id2label)
     print(task2_id2label[int(torch.argmax(output[1]))])
 

@@ -26,7 +26,7 @@ loaded_model = loaded_model.to(device)
 loaded_model.eval()
 loaded_model.freeze()
 
-test_df = pd.read_csv('../../res/preprocessed/task1_2/test_task1_2.csv')
+test_df = pd.read_csv('../../res/preprocessed/test_final.csv')
 tokenizer = AutoTokenizer.from_pretrained(config['bert_model_name'])
 test_dataset = TwitterDataset(test_df, tokenizer, max_token_len=config['max_token_len'])
 
