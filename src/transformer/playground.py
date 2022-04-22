@@ -14,13 +14,13 @@ torch.set_printoptions(precision=10)
 device = torch.device('cpu')
 loaded_model = TwitterNeuralNet()  # Task1->2 labels | Task2->3 Labels
 loaded_model.load_state_dict(torch.load(
-    os.path.join(PATH, "model.pt"), map_location=device))
+    os.path.join(PATH, "model1.pt"), map_location=device))
 
 loaded_model.eval()
 loaded_model.freeze()
 
 
-task_df = pd.read_csv('../../res/preprocessed/task1_2/task1_2.csv')
+task_df = pd.read_csv('../../res/preprocessed/train_final.csv')
 LABEL_COLUMNS = list(task_df.columns)
 LABEL_COLUMNS.remove('text')
 
@@ -35,8 +35,8 @@ task1_label2id = {label: idx for idx, label in enumerate(TASK1_LABELS)}
 task2_label2id = {label: idx for idx, label in enumerate(TASK2_LABELS)}
 task2_id2label = {idx: label for idx, label in enumerate(TASK2_LABELS)}
 
-task3_label3id = {label: idx for idx, label in enumerate(TASK3_LABELS)}
-task3_id3label = {idx: label for idx, label in enumerate(TASK3_LABELS)}
+task3_label2id = {label: idx for idx, label in enumerate(TASK3_LABELS)}
+task3_id2label = {idx: label for idx, label in enumerate(TASK3_LABELS)}
 
 
 print('-------INITIALIZING TOKENIZER-------')
@@ -69,8 +69,8 @@ while True:
 
     print('TASK 3')
     print(output[2])
-    print(task2_id2label)
-    print(task2_id2label[int(torch.argmax(output[1]))])
+    print(task3_id2label)
+    print(task3_id2label[int(torch.argmax(output[2]))])
 
     prompt = input('Do you wish to continue? Y|N: ')
     if prompt.lower() == 'y':

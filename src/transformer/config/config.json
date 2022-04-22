@@ -1,9 +1,11 @@
 {
    "num_workers": 0,
-   "bert_model_name": "bert-base-uncased",
-   "n_epochs": 2,
+   "bert_model_name": "distilbert-base-uncased",
+   "n_epochs": 1,
    "batch_size": 12,
    "max_token_len": 256,
-   "progress_bar_refresh_rate": 3,
-   "num_sanity_val_steps": 10
+   "progress_bar_refresh_rate": 1,
+   "num_sanity_val_steps": 10,
+   "learning_rate": 1.5e-5,
+   "w_decay": 0.001
 }

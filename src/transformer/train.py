@@ -52,16 +52,16 @@ total_training_steps = steps_per_epoch * config["n_epochs"]
 warmup_steps = total_training_steps // 5
 
 
-logger = TensorBoardLogger("./logs/lightning_logs",
-                           'twitter-task-all')
+logger = TensorBoardLogger("./logs/lightning_logs")
 
 checkpoint_callback = ModelCheckpoint(
-    dirpath="checkpoints",
-    filename="best-checkpoint",
+    dirpath="./checkpoints/",
+    filename='{epoch}-{val_loss: .2f}',
     save_top_k=1,
     verbose=True,
     monitor="val_loss",
-    mode="min"
+    mode="min",
+    every_n_train_steps=100,
 )
 
 print('-------INITIALIZING TWITTER NEURAL NET-------')
@@ -91,5 +91,5 @@ print('-------TRAINING COMPLETE-------')
 
 print('-------EXPORTING MODEL-------')
 PATH = './torch_model'
-torch.save(model.state_dict(), os.path.join(PATH, "model.pt"))
+torch.save(model.state_dict(), os.path.join(PATH, "model1.pt"))
 print('-------MODEL EXPORTED SUCCESSFULLY-------')

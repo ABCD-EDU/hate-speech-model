@@ -34,8 +34,9 @@ class TwitterNeuralNet(pl.LightningModule):
 
         self.n_training_steps = n_training_steps
         self.n_warmup_steps = n_warmup_steps
-        # self.criterion = nn.BCELoss()
-        self.criterion = nn.BCEWithLogitsLoss(reduction='mean')
+        self.criterion_CE = nn.CrossEntropyLoss()
+        self.criterion_BCE = nn.BCELoss(reduction="mean")
+        # self.criterion = nn.BCEWithLogitsLoss(reduction='mean')
         self.dropout = nn.Dropout(0.2)
 
     def forward(self, input_ids, attention_mask, labels=None):
@@ -51,18 +52,29 @@ class TwitterNeuralNet(pl.LightningModule):
         output2 = self.task2_classifier(pooled_output)
         output3 = self.task3_classifier(pooled_output)
 
+        # output1 = F.softmax(output1, dim=1)
         output1 = torch.sigmoid(output1)
         output2 = torch.sigmoid(output2)
         output3 = torch.sigmoid(output3)
+
         # print(output1)
         # print(output2)
         # print(output3)
         loss = 0
         if labels is not None:
-            loss1 = self.criterion(output1, labels['labels1'])
-            loss2 = self.criterion(output2, labels['labels2'])
-            loss3 = self.criterion(output3, labels['labels3'])
-            loss = loss1+loss2+loss3
+
+            loss1 = self.criterion_BCE(output1, labels['labels1'])
+            loss2 = self.criterion_BCE(output2, labels['labels2'])
+            loss3 = self.criterion_BCE(output3, labels['labels3'])
+            # print(loss1)
+            # print(loss2)
+            # print(loss3)
+            # loss = torch.mean(loss1, loss2, loss3)
+            loss = torch.mean(loss1+loss2+loss3)
+
+        # print(output1)
+        # print(output2)
+        # print(output3)
 
         # return loss, [output1, output2, output3]
         return loss, [output1, output2, output3]
@@ -101,7 +113,8 @@ class TwitterNeuralNet(pl.LightningModule):
         return outputs
 
     def configure_optimizers(self):
-        optimizer = AdamW(self.parameters(), lr=0.001)
+        optimizer = AdamW(
+            self.parameters(), lr=config['learning_rate'], weight_decay=config['w_decay'])
         scheduler = get_linear_schedule_with_warmup(
             optimizer,
             num_warmup_steps=self.n_warmup_steps,
