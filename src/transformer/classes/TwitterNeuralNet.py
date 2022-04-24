@@ -9,12 +9,12 @@ import json
 with open('./config/config.json', 'r') as f:
     config = json.load(f)
 
-
+print(config['bert_model_name'])
 class TwitterNeuralNet(pl.LightningModule):
-    def __init__(self, task1_n_classes: int = 3, task2_n_classes: int = 1, task3_n_classes: int = 5,  n_training_steps=None, n_warmup_steps=None):
+    def __init__(self, task1_n_classes: int = 3, task2_n_classes: int = 1, task3_n_classes: int = 5,  n_training_steps=None, n_warmup_steps=None, bert_model_name=None):
         super().__init__()
         self.bert = AutoModel.from_pretrained(
-            config['bert_model_name'], return_dict=True)
+            bert_model_name, return_dict=True)
         self.hidden = nn.Linear(self.bert.config.hidden_size,
                                 self.bert.config.hidden_size)
 
@@ -36,13 +36,10 @@ class TwitterNeuralNet(pl.LightningModule):
         self.n_warmup_steps = n_warmup_steps
         self.criterion_CE = nn.CrossEntropyLoss()
         self.criterion_BCE = nn.BCELoss(reduction="mean")
-        # self.criterion = nn.BCEWithLogitsLoss(reduction='mean')
         self.dropout = nn.Dropout(0.2)
 
     def forward(self, input_ids, attention_mask, labels=None):
         output = self.bert(input_ids, attention_mask=attention_mask)
-        # print(input_ids.shape)
-        # print(attention_mask.shape)
         pooled_output = torch.mean(output.last_hidden_state, 1)
         pooled_output = self.hidden(pooled_output)
         pooled_output = self.dropout(pooled_output)
@@ -52,31 +49,19 @@ class TwitterNeuralNet(pl.LightningModule):
         output2 = self.task2_classifier(pooled_output)
         output3 = self.task3_classifier(pooled_output)
 
-        # output1 = F.softmax(output1, dim=1)
-        output1 = torch.sigmoid(output1)
+        output1 = F.softmax(output1, dim=1)
         output2 = torch.sigmoid(output2)
         output3 = torch.sigmoid(output3)
 
-        # print(output1)
-        # print(output2)
-        # print(output3)
         loss = 0
         if labels is not None:
 
-            loss1 = self.criterion_BCE(output1, labels['labels1'])
+            loss1 = self.criterion_CE(output1, labels['labels1'])
             loss2 = self.criterion_BCE(output2, labels['labels2'])
             loss3 = self.criterion_BCE(output3, labels['labels3'])
-            # print(loss1)
-            # print(loss2)
-            # print(loss3)
-            # loss = torch.mean(loss1, loss2, loss3)
-            loss = torch.mean(loss1+loss2+loss3)
+            # loss = torch.mean(loss1*.33+loss2*.33+loss3*.33)
+            loss = loss1+loss2+loss3
 
-        # print(output1)
-        # print(output2)
-        # print(output3)
-
-        # return loss, [output1, output2, output3]
         return loss, [output1, output2, output3]
 
     def training_step(self, batch, batch_idx):
