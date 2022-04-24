@@ -55,9 +55,9 @@ warmup_steps = total_training_steps // 5
 logger = TensorBoardLogger("./logs/lightning_logs")
 
 checkpoint_callback = ModelCheckpoint(
-    dirpath="./checkpoints/",
+    dirpath='./checkpoints',
     filename='{epoch}-{val_loss: .2f}',
-    save_top_k=1,
+    save_top_k=2,
     verbose=True,
     monitor="val_loss",
     mode="min",
@@ -83,7 +83,8 @@ trainer = pl.Trainer(
     num_sanity_val_steps=config['num_sanity_val_steps'],
     fast_dev_run=False,
     logger=logger,
-    checkpoint_callback=checkpoint_callback,
+    # checkpoint_callback=checkpoint_callback,
+    default_root_dir="../transformer/saved/checkpoints"
 )
 trainer.fit(model, data_module)
 
@@ -91,5 +92,6 @@ print('-------TRAINING COMPLETE-------')
 
 print('-------EXPORTING MODEL-------')
 PATH = './torch_model'
-torch.save(model.state_dict(), os.path.join(PATH, "model1.pt"))
+torch.save(model.state_dict(), os.path.join(
+    PATH, config["trained_model_name"]))
 print('-------MODEL EXPORTED SUCCESSFULLY-------')

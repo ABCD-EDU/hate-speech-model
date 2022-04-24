@@ -14,7 +14,7 @@ torch.set_printoptions(precision=10)
 device = torch.device('cpu')
 loaded_model = TwitterNeuralNet()  # Task1->2 labels | Task2->3 Labels
 loaded_model.load_state_dict(torch.load(
-    os.path.join(PATH, "model1.pt"), map_location=device))
+    os.path.join(PATH, config["trained_model_name"]), map_location=device))
 
 loaded_model.eval()
 loaded_model.freeze()
