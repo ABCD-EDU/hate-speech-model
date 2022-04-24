@@ -12,7 +12,8 @@ print('-------IMPORTING MODEL-------')
 PATH = './torch_model'
 torch.set_printoptions(precision=10)
 device = torch.device('cpu')
-loaded_model = TwitterNeuralNet()  # Task1->2 labels | Task2->3 Labels
+# Task1->2 labels | Task2->3 Labels
+loaded_model = TwitterNeuralNet(bert_model_name=config['bert_model_name'])
 loaded_model.load_state_dict(torch.load(
     os.path.join(PATH, config["trained_model_name"]), map_location=device))
 
