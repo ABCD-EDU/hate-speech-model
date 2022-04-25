@@ -29,8 +29,8 @@ LABEL_COLUMNS = list(train_df.columns)
 LABEL_COLUMNS.remove('text')
 
 TASK1_LABELS = LABEL_COLUMNS[:3]
-TASK2_LABELS = LABEL_COLUMNS[3:4]
-TASK3_LABELS = LABEL_COLUMNS[4:]
+TASK2_LABELS = LABEL_COLUMNS[3:5]
+TASK3_LABELS = LABEL_COLUMNS[5:]
 
 print('-------INITIALIZING TOKENIZER-------')
 tokenizer = AutoTokenizer.from_pretrained(config['bert_model_name'])
@@ -70,7 +70,8 @@ model = TwitterNeuralNet(
     task2_n_classes=len(TASK2_LABELS),
     task3_n_classes=len(TASK3_LABELS),
     n_warmup_steps=warmup_steps,
-    n_training_steps=total_training_steps
+    n_training_steps=total_training_steps,
+    bert_model_name=config['bert_model_name']
 )
 print('-------NEURAL NET INITIALIZED-------')
 

@@ -10,8 +10,10 @@ with open('./config/config.json', 'r') as f:
     config = json.load(f)
 
 print(config['bert_model_name'])
+
+
 class TwitterNeuralNet(pl.LightningModule):
-    def __init__(self, task1_n_classes: int = 3, task2_n_classes: int = 1, task3_n_classes: int = 5,  n_training_steps=None, n_warmup_steps=None, bert_model_name=None):
+    def __init__(self, task1_n_classes: int = 3, task2_n_classes: int = 2, task3_n_classes: int = 5,  n_training_steps=None, n_warmup_steps=None, bert_model_name=None):
         super().__init__()
         self.bert = AutoModel.from_pretrained(
             bert_model_name, return_dict=True)
@@ -49,15 +51,15 @@ class TwitterNeuralNet(pl.LightningModule):
         output2 = self.task2_classifier(pooled_output)
         output3 = self.task3_classifier(pooled_output)
 
-        output1 = F.softmax(output1, dim=1)
-        output2 = torch.sigmoid(output2)
+        output1 = F.softmax(output1, dim=0)
+        output2 = F.softmax(output2, dim=0)
         output3 = torch.sigmoid(output3)
 
         loss = 0
         if labels is not None:
 
             loss1 = self.criterion_CE(output1, labels['labels1'])
-            loss2 = self.criterion_BCE(output2, labels['labels2'])
+            loss2 = self.criterion_CE(output2, labels['labels2'])
             loss3 = self.criterion_BCE(output3, labels['labels3'])
             # loss = torch.mean(loss1*.33+loss2*.33+loss3*.33)
             loss = loss1+loss2+loss3

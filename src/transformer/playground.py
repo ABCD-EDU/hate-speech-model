@@ -11,6 +11,9 @@ with open('./config/config.json', 'r') as f:
 print('-------IMPORTING MODEL-------')
 PATH = './torch_model'
 torch.set_printoptions(precision=10)
+torch.set_printoptions(sci_mode=False)
+# torch.set_printoptions(precision=6)
+
 device = torch.device('cpu')
 # Task1->2 labels | Task2->3 Labels
 loaded_model = TwitterNeuralNet(bert_model_name=config['bert_model_name'])
@@ -26,8 +29,8 @@ LABEL_COLUMNS = list(task_df.columns)
 LABEL_COLUMNS.remove('text')
 
 TASK1_LABELS = LABEL_COLUMNS[:3]
-TASK2_LABELS = LABEL_COLUMNS[3:4]
-TASK3_LABELS = LABEL_COLUMNS[4:]
+TASK2_LABELS = LABEL_COLUMNS[3:5]
+TASK3_LABELS = LABEL_COLUMNS[5:]
 
 
 task1_id2label = {idx: label for idx, label in enumerate(TASK1_LABELS)}

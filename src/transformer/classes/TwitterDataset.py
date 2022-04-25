@@ -16,8 +16,8 @@ class TwitterDataset(Dataset):
         self.LABEL_COLUMNS = list(self.data.columns)
         self.LABEL_COLUMNS.remove('text')
         self.TASK1_LABELS = self.LABEL_COLUMNS[:3]
-        self.TASK2_LABELS = self.LABEL_COLUMNS[3:4]
-        self.TASK3_LABELS = self.LABEL_COLUMNS[4:]
+        self.TASK2_LABELS = self.LABEL_COLUMNS[3:5]
+        self.TASK3_LABELS = self.LABEL_COLUMNS[5:]
 
     def __getitem__(self, idx):
         data_row = self.data.iloc[idx]

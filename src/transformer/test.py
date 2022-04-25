@@ -21,7 +21,7 @@ loaded_model = TwitterNeuralNet(bert_model_name=config['bert_model_name'])  # Ta
 loaded_model.load_state_dict(torch.load(
     os.path.join(PATH, config["trained_model_name"]), map_location=device))
     # os.path.join(PATH, "bert_30_epoch.pt"), map_location=device))
-
+torch.set_printoptions(sci_mode=False)
 loaded_model = loaded_model.to(device)
 loaded_model.eval()
 loaded_model.freeze()
@@ -35,8 +35,8 @@ LABEL_COLUMNS = list(test_df.columns)
 LABEL_COLUMNS.remove('text')
 
 TASK1_LABELS = LABEL_COLUMNS[:3]
-TASK2_LABELS = LABEL_COLUMNS[3:4]
-TASK3_LABELS = LABEL_COLUMNS[4:]
+TASK2_LABELS = LABEL_COLUMNS[3:5]
+TASK3_LABELS = LABEL_COLUMNS[5:]
 
 
 task1_id2label = {idx: label for idx, label in enumerate(TASK1_LABELS)}
@@ -61,7 +61,7 @@ def get_accuracy_score():
 
     with torch.no_grad():
         for idx, item in enumerate(test_dataset):
-            # print(test_df.iloc[idx].text)
+            print(test_df.iloc[idx,1:])
             # if idx == 20:
             #     break
             _, prediction = loaded_model(
@@ -77,21 +77,21 @@ def get_accuracy_score():
             task2_labels.append(item['labels2'].int())
             task3_labels.append(item['labels3'].int())
 
-            # print('TASK 1')
-            # print(prediction[0])
-            # print(task1_id2label)
-            # print(task1_id2label[int(torch.argmax(prediction[0]))])
+            print('TASK 1')
+            print(prediction[0])
+            print(task1_id2label)
+            print(task1_id2label[int(torch.argmax(prediction[0]))])
 
-            # print('TASK 2')
-            # print(prediction[1])
-            # print(task2_id2label)
-            # print(task2_id2label[int(torch.argmax(prediction[1]))])
+            print('TASK 2')
+            print(prediction[1])
+            print(task2_id2label)
+            print(task2_id2label[int(torch.argmax(prediction[1]))])
 
-            # print('TASK 3')
-            # print(prediction[2])
-            # print(task3_id2label)
-            # print(task3_id2label[int(torch.argmax(prediction[2]))])
-            # print('=============================')
+            print('TASK 3')
+            print(prediction[2])
+            print(task3_id2label)
+            print(task3_id2label[int(torch.argmax(prediction[2]))])
+            print('=============================')
 
     task1_predictions_ = torch.stack(task1_predictions).detach().cpu()
     task1_labels_ = torch.stack(task1_labels).detach().cpu()
