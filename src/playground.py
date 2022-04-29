@@ -3,7 +3,7 @@ import pandas as pd
 import json
 import torch
 from transformers import AutoTokenizer
-from classes.TwitterNeuralNet import TwitterNeuralNet
+from classes.Heirarchichal.HeirarchichalNN import TwitterNeuralNet
 
 with open('./config/config.json', 'r') as f:
     config = json.load(f)

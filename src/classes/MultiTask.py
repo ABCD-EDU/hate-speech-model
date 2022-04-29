@@ -9,8 +9,8 @@ import json
 with open('./config/config.json', 'r') as f:
     config = json.load(f)
 
-print(config['bert_model_name'])
-class TwitterNeuralNet(pl.LightningModule):
+
+class MultiTaskNN(pl.LightningModule):
     def __init__(self, task1_n_classes: int = 3, task2_n_classes: int = 1, task3_n_classes: int = 5,  n_training_steps=None, n_warmup_steps=None, bert_model_name=None):
         super().__init__()
         self.bert = AutoModel.from_pretrained(

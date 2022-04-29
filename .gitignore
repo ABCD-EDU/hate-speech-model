@@ -1,5 +1,5 @@
 bert_notebook/lightning_logs/
 bert_notebook/saved_model/
-src/transformer/classes/__pycache__
-src/transformer/logs/lightning_logs
-src/transformer/torch_model
+src/classes/__pycache__
+src/logs/lightning_logs
+src/torch_model
